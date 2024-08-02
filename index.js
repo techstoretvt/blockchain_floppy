@@ -50,7 +50,7 @@ app.get('/transfer', async (req, res) => {
     let id_a = req?.query.id_a
     let id_b = req.query.id_b
     let amount = +req.query.amount
-    console.log(amount);
+    console.log('amount: ', amount);
     try {
         let balance = await Interaction.tranfer(id_a, id_b, amount)
 

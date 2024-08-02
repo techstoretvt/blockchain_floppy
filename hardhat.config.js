@@ -10,7 +10,14 @@ module.exports = {
     },
     ganache: {
       url: process.env.GANACHE_URL || 'http://127.0.0.1:7545',
-      accounts: [process.env.PRIV_KEY, '0xe8ddb214b7216fd97bc55b697302c7d3d97e0f20bad6ff72f46aa40826e3d3ca']
+      accounts: [process.env.PRIV_KEY]
+    },
+    go: {
+      url: 'http://127.0.0.1:8545',
+      accounts: [process.env.PRIV_KEY]
     }
   },
+  etherscan: {
+    apiKey: process.env.API_KEY
+  }
 };
