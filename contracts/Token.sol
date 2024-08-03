@@ -8,14 +8,33 @@ import "hardhat/console.sol";
 contract Floppy is ERC20("Floppy", "FLP"), ERC20Burnable, Ownable {
     uint256 private cap = 50_000_000_000 * 10 ** uint256(18);
 
-    // Danh sách sinh viên
-    struct Student {
-        string name;
-        uint256 age;
+    struct Hotel {
+        string tenPhong;
+        uint256 donGia;
+        string tienIch;
+        uint256 khuyenMai;
+        string anh1;
+        string anh2;
     }
 
-    mapping(address => Student) private students;
-    address[] private studentAddresses;
+    struct LichSu {
+        string idTranfer;
+        string addressPhong;
+        string addressFrom;
+        string addressTo;
+        uint256 amount;
+        uint256 time;
+        uint256 gasPrice;
+        string tenKhach;
+        string email;
+        string sdt;
+    }
+
+    mapping(address => Hotel) private hotels;
+    address[] private hotelAddresses;
+
+    mapping(address => LichSu) private lichSus;
+    address[] private lichSuAddresses;
 
     constructor() {
         console.log("owner: %s maxcap: %s", msg.sender, cap);
@@ -27,54 +46,167 @@ contract Floppy is ERC20("Floppy", "FLP"), ERC20Burnable, Ownable {
         _mint(to, amount);
     }
 
-    // Thêm sinh viên mới
-    function addStudent(
-        address studentAddress,
-        string memory name,
-        uint256 age
+    // Thêm hotel mới
+    function addHotel(
+        address hotelAddress,
+        string memory tenPhong,
+        uint256 donGia,
+        string memory tienIch,
+        uint256 khuyenMai,
+        string memory anh1,
+        string memory anh2
     ) public onlyOwner {
         require(
-            bytes(students[studentAddress].name).length == 0,
-            "Student already exists"
+            bytes(hotels[hotelAddress].tenPhong).length == 0,
+            "Hotel already exists"
         );
-        students[studentAddress] = Student(name, age);
-        studentAddresses.push(studentAddress);
+        hotels[hotelAddress] = Hotel(
+            tenPhong,
+            donGia,
+            tienIch,
+            khuyenMai,
+            anh1,
+            anh2
+        );
+        hotelAddresses.push(hotelAddress);
     }
 
-    // Xóa sinh viên
-    function removeStudent(address studentAddress) public onlyOwner {
+    // Xóa hotel
+    function removeStudent(address hotelAddress) public onlyOwner {
         require(
-            bytes(students[studentAddress].name).length != 0,
-            "Student does not exist"
+            bytes(hotels[hotelAddress].tenPhong).length != 0,
+            "Hotel does not exist"
         );
-        delete students[studentAddress];
+        delete hotels[hotelAddress];
 
-        // Xóa địa chỉ sinh viên khỏi danh sách
-        for (uint256 i = 0; i < studentAddresses.length; i++) {
-            if (studentAddresses[i] == studentAddress) {
-                studentAddresses[i] = studentAddresses[
-                    studentAddresses.length - 1
-                ];
-                studentAddresses.pop();
+        // Xóa địa chỉ hotel khỏi danh sách
+        for (uint256 i = 0; i < hotelAddresses.length; i++) {
+            if (hotelAddresses[i] == hotelAddress) {
+                hotelAddresses[i] = hotelAddresses[hotelAddresses.length - 1];
+                hotelAddresses.pop();
                 break;
             }
         }
     }
 
-    // Lấy thông tin sinh viên
+    // Lấy thông tin hotel
     function getStudent(
-        address studentAddress
-    ) public view returns (string memory name, uint256 age) {
+        address hotelAddress
+    )
+        public
+        view
+        returns (
+            string memory tenPhong,
+            uint256 donGia,
+            string memory tienIch,
+            uint256 khuyenMai,
+            string memory anh1,
+            string memory anh2
+        )
+    {
         require(
-            bytes(students[studentAddress].name).length != 0,
-            "Student does not exist"
+            bytes(hotels[hotelAddress].tenPhong).length != 0,
+            "Hotel does not exist"
         );
-        Student memory student = students[studentAddress];
-        return (student.name, student.age);
+        Hotel memory hotel = hotels[hotelAddress];
+        return (
+            hotel.tenPhong,
+            hotel.donGia,
+            hotel.tienIch,
+            hotel.khuyenMai,
+            hotel.anh1,
+            hotel.anh2
+        );
     }
 
     // Lấy danh sách tất cả sinh viên
     function getAllStudents() public view returns (address[] memory) {
-        return studentAddresses;
+        return hotelAddresses;
+    }
+
+    // string idTranfer;
+    // string addressPhong;
+    // string addressFrom;
+    // string addressTo;
+    // uint256 amount;
+    // uint256 time;
+    // string tenKhach;
+    // string email;
+    // string sdt;
+
+    // Thêm lich su mới
+    function addLichSu(
+        address lichSuAddress,
+        string memory idTranfer,
+        string memory addressPhong,
+        string memory addressFrom,
+        string memory addressTo,
+        uint256 amount,
+        uint256 time,
+        uint256 gasPrice,
+        string memory tenKhach,
+        string memory email,
+        string memory sdt
+    ) public onlyOwner {
+        require(
+            bytes(lichSus[lichSuAddress].idTranfer).length == 0,
+            "Lich su already exists"
+        );
+        lichSus[lichSuAddress] = LichSu(
+            idTranfer,
+            addressPhong,
+            addressFrom,
+            addressTo,
+            amount,
+            time,
+            gasPrice,
+            tenKhach,
+            email,
+            sdt
+        );
+        lichSuAddresses.push(lichSuAddress);
+    }
+
+    // Lấy thông tin lich su
+    function getLichSu(
+        address lichSuAddress
+    )
+        public
+        view
+        returns (
+            string memory idTranfer,
+            string memory addressPhong,
+            string memory addressFrom,
+            string memory addressTo,
+            uint256 amount,
+            uint256 time,
+            uint256 gasPrice,
+            string memory tenKhach,
+            string memory email,
+            string memory sdt
+        )
+    {
+        require(
+            bytes(lichSus[lichSuAddress].idTranfer).length != 0,
+            "Lich su does not exist"
+        );
+        LichSu memory lichSu = lichSus[lichSuAddress];
+        return (
+            lichSu.idTranfer,
+            lichSu.addressPhong,
+            lichSu.addressFrom,
+            lichSu.addressTo,
+            lichSu.amount,
+            lichSu.time,
+            lichSu.gasPrice,
+            lichSu.tenKhach,
+            lichSu.email,
+            lichSu.sdt
+        );
+    }
+
+    // Lấy danh sách tất cả lichsu
+    function getAllLichSu() public view returns (address[] memory) {
+        return lichSuAddresses;
     }
 }

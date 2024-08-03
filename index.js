@@ -79,9 +79,14 @@ app.get('/transfer-ks', async (req, res) => {
 
     let id_a = req?.query.id_a
     let amount = +req.query.amount
+    let id_phong = req.query.id_phong
+    let tenKhach = req.query.tenKhach
+    let email = req.query.email
+    let sdt = req.query.sdt
+
     console.log(amount);
     try {
-        let balance = await Interaction.tranfer_ks(id_a, amount)
+        let balance = await Interaction.tranfer_ks(id_a, amount, id_phong, tenKhach, email, sdt)
 
         return res.status(200).json({
             errCode: 0,
@@ -96,6 +101,86 @@ app.get('/transfer-ks', async (req, res) => {
     }
 
 })
+
+
+app.get('/get-all-hotel', async (req, res) => {
+
+    try {
+        let hotels = await Interaction.getAllHotel()
+
+        return res.status(200).json({
+            errCode: 0,
+            errMessage: "OK",
+            data: hotels
+        })
+    } catch (error) {
+        return res.status(301).json({
+            errCode: 1,
+            errMessage: error.data.reason,
+        })
+    }
+
+})
+
+app.get('/add-hotel', async (req, res) => {
+
+    let tenPhong = req?.query.tenPhong
+    let donGia = +req.query.donGia
+    let khuyenMai = +req.query.khuyenMai
+    let tienIch = req?.query.tienIch
+    let anh1 = req?.query.anhPhong1
+    let anh2 = req?.query.anhPhong2
+
+
+    try {
+        // let hotel = await Interaction.addHotel(tenPhong, donGia, tienIch, khuyenMai, anh1, anh2)
+        await Interaction.addHotel(tenPhong, donGia, tienIch, khuyenMai, anh1, anh2)
+            .then(() => {
+                console.log("Hotel added successfully")
+                return res.status(200).json({
+                    errCode: 0,
+                    errMessage: "OK",
+                })
+            })
+            .catch(err => {
+                console.error("Error adding hotel:", err)
+                return res.status(500).json({
+                    errCode: 1,
+                    errMessage: "Error"
+                })
+            });
+
+
+
+    } catch (error) {
+        return res.status(301).json({
+            errCode: 1,
+            errMessage: error.data.reason,
+        })
+    }
+
+})
+
+
+app.get('/get-all-lich-su', async (req, res) => {
+
+    try {
+        let listLichSu = await Interaction.getAllLichSu()
+
+        return res.status(200).json({
+            errCode: 0,
+            errMessage: "OK",
+            data: listLichSu
+        })
+    } catch (error) {
+        return res.status(301).json({
+            errCode: 1,
+            errMessage: error.data.reason,
+        })
+    }
+
+})
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
