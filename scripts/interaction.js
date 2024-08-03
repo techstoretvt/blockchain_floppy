@@ -6,6 +6,8 @@ const ABI = require('../artifacts/contracts/Token.sol/Floppy.json');
 const floppyAbi = ABI.abi
 const floppyAddress = process.env.PLOPPY_ADDRESS //mã khi deploy
 const myPrivateKey = process.env.PRIV_KEY
+const myPrivateKey2 = process.env.MY_PRIV_KEY
+
 const myAdress = process.env.MY_ADDRESS //address của account khai báo trong hardhat
 const addressShop = process.env.ADDRESS_SHOP //address của account khai báo trong hardhat
 const receiverAddress = "0xfe9a28761667484A01375a0334F38a0E8989E2E6" // address của người nhận
@@ -61,7 +63,7 @@ async function tranfer(id_a, id_b, amount) {
 
             /// Send --> modify the state of t he blockchain
             /// tranfer token
-            await web3.eth.accounts.wallet.add(myPrivateKey)
+            await web3.eth.accounts.wallet.add(myPrivateKey2)
             console.log('vao 1');
 
             const rs = await floppyContract.methods.transfer(id_b, amount).send({
@@ -102,7 +104,7 @@ async function tranfer_ks(id_a, amount, id_phong, tenKhach, email, sdt) {
     console.log("myBalance: ", myBalance);
     /// Send --> modify the state of t he blockchain
     /// tranfer token
-    await web3.eth.accounts.wallet.add(myPrivateKey)
+    await web3.eth.accounts.wallet.add(myPrivateKey2)
     const receiverBalanceBefore = await floppyContract.methods.balanceOf(addressShop).call()
 
     const rs = await floppyContract.methods.transfer(addressShop, amount).send({
